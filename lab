@@ -130,3 +130,6 @@ gcloud compute instances set-machine-type observability-vm \
 Cloud Storage → Bucket → Lifecycle → Add Rule (30 days → Coldline).
 
 VPC → Egress traffic → review traffic costs.
+
+# kubectl apply -f k8s/deployment.yaml --validate=false
+
