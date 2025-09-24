@@ -1,0 +1,11 @@
+      - name: Deploy to GKE
+        run: |
+          # Replace placeholder image in manifests
+          sed -i "s|PLACEHOLDER_IMAGE|$IMAGE|g" k8s/deployment.yaml
+          
+          # Apply manifests
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          
+          # Wait for rollout
+          kubectl rollout status deployment/my-python-app
