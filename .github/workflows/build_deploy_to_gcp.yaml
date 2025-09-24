@@ -28,7 +28,8 @@ jobs:
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
             
       - name: Get GKE Credentials
-        run: gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GCP_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
+        run: gcloud container clusters get-credentials autopilot-cluster-1 --region asia-east1 --project ${{ env.GOOGLE_CLOUD_PROJECT }}
+
             
       - name: Deploy to GKE
         run: |
