@@ -1,0 +1,132 @@
+Lab 1: Monitoring, Logging & Observability
+1.1 Create VM + Install Ops Agent
+
+Create VM (e2-micro, allow HTTP).
+
+SSH into VM.
+
+Run:
+
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+
+
+Verify in Monitoring → Metrics Explorer.
+
+1.2 Explore Cloud Logging
+
+Open Logs Explorer.
+
+Filter by VM instance logs.
+
+1.3 Dashboards & Alerts
+
+Monitoring → Dashboards → Create Dashboard.
+
+Add CPU utilization chart.
+
+Create alert: CPU > 80% for 5 min.
+
+1.4 Distributed Tracing (Cloud Trace)
+
+Deploy app:
+
+gcloud run deploy trace-demo \
+  --image=gcr.io/cloudrun/hello \
+  --region=us-central1 --allow-unauthenticated
+
+
+Send requests to URL.
+
+View traces in Trace → Trace List.
+
+1.5 Error Reporting & Uptime Checks
+
+Open Error Reporting.
+
+Create uptime check for VM or Cloud Run URL.
+
+Lab 2: SRE Foundations
+2.1 Create SLO
+
+Monitoring → SLOs → Create SLO.
+
+Choose service + latency metric < 300ms.
+
+Target: 99%.
+
+2.2 Incident Response Simulation
+
+Stop VM:
+
+gcloud compute instances stop observability-vm
+
+
+Watch alert trigger.
+
+Restart VM:
+
+gcloud compute instances start observability-vm
+
+
+Write postmortem notes.
+
+Lab 3: Security & Compliance
+3.1 Secret Manager
+
+Security → Secret Manager → Create Secret.
+
+Access in Cloud Shell:
+
+gcloud secrets versions access latest --secret="db-password"
+
+3.2 IAM Least Privilege
+
+IAM → Add member → Viewer role.
+
+Try to create VM (fail).
+
+Assign Compute Admin role.
+
+Retry (success).
+
+3.3 Binary Authorization
+
+Enable Binary Authorization API.
+
+Create attestor:
+
+gcloud container binauthz attestors create test-attestor \
+  --project=$GOOGLE_CLOUD_PROJECT
+
+
+Deploy image without attestation (blocked).
+
+Add attestation + redeploy (success).
+
+Lab 4: Cost Optimization
+4.1 Budget & Alerts
+
+Billing → Budgets & alerts → Create Budget.
+
+Set budget ($50).
+
+Add alerts at 50%, 90%, 100%.
+
+4.2 Discounts
+
+Billing → Discounts → Committed use contracts.
+
+Review options vs on-demand.
+
+4.3 Optimization
+
+Resize VM:
+
+gcloud compute instances set-machine-type observability-vm \
+  --machine-type=e2-small
+
+
+Cloud Storage → Bucket → Lifecycle → Add Rule (30 days → Coldline).
+
+VPC → Egress traffic → review traffic costs.
