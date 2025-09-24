@@ -26,15 +26,21 @@ jobs:
           docker build -t $IMAGE .
           docker push $IMAGE
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
- 
-      - name: Deploy to Cloud Run
-        run: |
-          gcloud run deploy my-python-app \
-            --image $IMAGE \
-            --region ${{ secrets.GCP_REGION }} \
-            --platform managed \
-            --allow-unauthenticated
             
+      - name: Get GKE Credentials
+        run: gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --region ${{ secrets.GCP_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
+            
+      - name: Deploy to GKE
+        run: |
+          # Replace placeholder image in manifests
+          sed -i "s|PLACEHOLDER_IMAGE|$IMAGE|g" k8s/deployment.yaml
+          
+          # Apply manifests
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          
+          # Wait for rollout
+          kubectl rollout status deployment/my-python-app          
             
             
             
